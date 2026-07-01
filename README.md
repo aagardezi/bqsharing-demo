@@ -74,6 +74,27 @@ sequenceDiagram
 
 We have packaged the entire deployment, verification, and teardown flows into three simple executable scripts under the `scripts/` folder.
 
+### Step 0: Authenticate Your Environment
+Before running the setup or client scripts, ensure your gcloud session is authenticated with the correct GCP account and project.
+
+**For Provider Actions (Step 1)**:
+Authenticate as the provider user (`aagardezi@sgardezi.altostrat.com`) and set the provider project:
+```bash
+gcloud auth login aagardezi@sgardezi.altostrat.com
+gcloud config set project genaillentsearch
+gcloud auth application-default login
+```
+
+**For Client Actions (Step 2)**:
+Switch to the client user account (`aagardezi@gmail.com`) and set the client project:
+```bash
+gcloud auth login aagardezi@gmail.com
+gcloud config set project cleanroomdemo-471909
+gcloud auth application-default login
+```
+
+---
+
 ### Step 1: Deploy Provider Side & Seed Data
 Initialize Terraform, deploy all provider-side GCP resources (datasets, views, Pub/Sub, Cloud Function, Exchange/Listing), and seed the raw tables with simulated market data.
 Run this using the provider credentials:
