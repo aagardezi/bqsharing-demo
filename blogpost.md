@@ -27,7 +27,7 @@ The architecture relies on separate GCP project boundaries representing the Data
 
 ```mermaid
 graph TD
-    subgraph Data Provider Project (genaillentsearch)
+    subgraph provider ["Data Provider Project (genaillentsearch)"]
         direction TB
         RawDS[(Raw Exchange Dataset)] -->|Read Permission| ViewsDS[(Shared Views Dataset)]
         ViewsDS -->|Data Listing| AH[Analytics Hub Exchange]
@@ -36,7 +36,7 @@ graph TD
         CF -->|Updates view SQL| ViewsDS
     end
 
-    subgraph Customer Project (cleanroomdemo-471909)
+    subgraph customer ["Customer Project (cleanroomdemo-471909)"]
         direction TB
         AH -->|Subscribe| LinkedDS[(Linked Dataset)]
         ClientQuery[Client Query Engine] -->|Queries| LinkedDS
@@ -56,7 +56,7 @@ graph TD
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Client as Client App (cleanroomdemo-471909)
+    actor Client as "Client App (cleanroomdemo-471909)"
     participant Topic as Pub/Sub Request Topic
     participant CF as Cloud Function (Gen 2)
     participant Views as Shared Views Dataset
