@@ -32,3 +32,6 @@ env/
 .vscode/
 *.swp
 *.swo
+
+# Archives
+*.zip
