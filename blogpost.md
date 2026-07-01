@@ -43,8 +43,8 @@ graph TD
         ClientApp[Client Requestor App] -->|Publishes Tickers| PubSub
     end
     
-    classDef provider fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
-    classDef client fill:#efebe9,stroke:#5d4037,stroke-width:2px;
+    classDef provider fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000;
+    classDef client fill:#efebe9,stroke:#5d4037,stroke-width:2px,color:#000;
     class AH,CF,RawDS,ViewsDS,PubSub provider;
     class LinkedDS,ClientQuery,ClientApp client;
 ```
