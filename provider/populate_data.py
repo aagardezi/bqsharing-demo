@@ -12,6 +12,22 @@ def populate():
     project_id = client.project
     
     dataset_id = "raw_exchange_data"
+    
+    # Define schemas to prevent BigQuery Load Jobs from overriding and drifting the Terraform schema
+    ref_schema = [
+        bigquery.SchemaField("instrument_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("name", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("sector", "STRING", mode="NULLABLE"),
+        bigquery.SchemaField("currency", "STRING", mode="NULLABLE"),
+    ]
+
+    ticks_schema = [
+        bigquery.SchemaField("timestamp", "TIMESTAMP", mode="REQUIRED"),
+        bigquery.SchemaField("instrument_id", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("price", "NUMERIC", mode="REQUIRED"),
+        bigquery.SchemaField("volume", "INTEGER", mode="REQUIRED"),
+    ]
+
     print(f"Populating data for project {project_id}, dataset {dataset_id}")
     
     exchanges = {
@@ -73,6 +89,7 @@ def populate():
             
         job_config = bigquery.LoadJobConfig(
             write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
+            schema=ref_schema
         )
         try:
             job = client.load_table_from_json(ref_rows, ref_table_id, job_config=job_config)
@@ -111,6 +128,7 @@ def populate():
                 
         job_config = bigquery.LoadJobConfig(
             write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
+            schema=ticks_schema
         )
         try:
             job = client.load_table_from_json(ticks, ticks_table_id, job_config=job_config)
