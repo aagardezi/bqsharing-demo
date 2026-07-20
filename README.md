@@ -6,6 +6,34 @@ It simulates a data provider hosting raw equities tick and reference data across
 
 ## System Architecture
 
+### Components & Data Flow
+
+```mermaid
+graph TD
+    subgraph provider ["Data Provider Project (genaillentsearch)"]
+        direction TB
+        RawDS[(Raw Exchange Dataset)] -->|Read Permission| ViewsDS[(Shared Views Dataset)]
+        ViewsDS -->|Data Listing| AH[Analytics Hub Exchange]
+        
+        PubSub[Pub/Sub Request Topic] -->|Event Trigger| CF[Cloud Function v2]
+        CF -->|Updates view SQL| ViewsDS
+    end
+
+    subgraph customer ["Customer Project (cleanroomdemo-471909)"]
+        direction TB
+        AH -->|Subscribe| LinkedDS[(Linked Dataset)]
+        ClientQuery[Client Query Engine] -->|Queries| LinkedDS
+        ClientApp[Client Requestor App] -->|Publishes Tickers| PubSub
+    end
+    
+    classDef provider fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000;
+    classDef client fill:#efebe9,stroke:#5d4037,stroke-width:2px,color:#000;
+    class AH,CF,RawDS,ViewsDS,PubSub provider;
+    class LinkedDS,ClientQuery,ClientApp client;
+```
+
+### End-to-End Sequence Flow
+
 ```mermaid
 sequenceDiagram
     autonumber
