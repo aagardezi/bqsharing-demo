@@ -34,5 +34,5 @@ resource "google_bigquery_analytics_hub_listing_iam_member" "subscriber_access_d
   listing_id       = google_bigquery_analytics_hub_listing.market_data_listing.listing_id
   location         = var.region
   role             = "roles/analyticshub.subscriber"
-  member           = "user:aagardezi@sgardezi.altostrat.com"
+  member           = "user:${var.provider_developer_email}"
 }

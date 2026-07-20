@@ -44,7 +44,7 @@ sequenceDiagram
     participant AH as Analytics Hub Exchange/Listing
     participant BQ_Raw as BigQuery Raw Dataset
     
-    Note over Client: Authenticated as aagardezi@gmail.com
+    Note over Client: Authenticated as client-user@example.com
     Note over BQ_Raw: Seeded with ticks & ref data
     
     Client->>AH: Subscribe to Exchange Listing
@@ -106,17 +106,17 @@ We have packaged the entire deployment, verification, and teardown flows into th
 Before running the setup or client scripts, ensure your gcloud session is authenticated with the correct GCP account and project.
 
 **For Provider Actions (Step 1)**:
-Authenticate as the provider user (`aagardezi@sgardezi.altostrat.com`) and set the provider project:
+Authenticate as the provider user (`provider-admin@example.com`) and set the provider project:
 ```bash
-gcloud auth login aagardezi@sgardezi.altostrat.com
+gcloud auth login provider-admin@example.com
 gcloud config set project genaillentsearch
 gcloud auth application-default login
 ```
 
 **For Client Actions (Step 2)**:
-Switch to the client user account (`aagardezi@gmail.com`) and set the client project:
+Switch to the client user account (`client-user@example.com`) and set the client project:
 ```bash
-gcloud auth login aagardezi@gmail.com
+gcloud auth login client-user@example.com
 gcloud config set project cleanroomdemo-471909
 gcloud auth application-default login
 ```
@@ -130,6 +130,13 @@ Run this using the provider credentials:
 ./scripts/setup_provider.sh <provider_project_id>
 ```
 *If project ID is omitted, it defaults to `genaillentsearch`.*
+
+> [!TIP]
+> To configure your actual subscriber and developer emails without checking them into Git, create a `terraform/terraform.tfvars` file in the `terraform/` folder before running setup:
+> ```hcl
+> client_user_email         = "your-client-email@gmail.com"
+> provider_developer_email = "your-provider-email@altostrat.com"
+> ```
 
 ### Step 2: Run Client Subscription & Verify Updates
 Simulate the customer subscribing to the listing, querying the views (initially empty), publishing a request for specific symbols, waiting for the update, and verifying that the views now return only the requested records.
@@ -160,4 +167,4 @@ Cleanly remove all provisioned GCP resources from both provider and client proje
 - **Dependency Order Resolution**: Explicit `depends_on` constraints were configured in `terraform/bigquery.tf` between the view definitions and the raw tables. This prevents transient `404 Table not found` errors when Terraform attempts to create views before BigQuery has fully registered the raw base tables.
 - **Streaming Buffer Avoidance**: The population script (`provider/populate_data.py`) was optimized to use **BigQuery Load Jobs** (`WRITE_TRUNCATE` disposition) instead of streaming inserts (`insert_rows_json`). This completely avoids BigQuery streaming buffer locks, allowing immediate subsequent updates or deletes of the tables during developer iterations.
 - **SQL Injection Prevention**: The Cloud Function sanitizes instrument IDs from incoming Pub/Sub JSON messages by filtering out any characters that are not alphanumeric or expected symbols (`.`, `-`, `/`), ensuring the dynamic SQL query updates are safe.
-- **Local Testing Simulation**: A subscriber IAM member for the provider session identity (`aagardezi@sgardezi.altostrat.com`) is provisioned by default in Terraform. This allows testing the listing subscription and data querying locally within the provider project if an external client project is not available.
+- **Local Testing Simulation**: A subscriber IAM member for the provider session identity (`provider-admin@example.com`) is provisioned by default in Terraform. This allows testing the listing subscription and data querying locally within the provider project if an external client project is not available.

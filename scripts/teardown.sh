@@ -30,7 +30,7 @@ $TERRAFORM_CMD -chdir=terraform destroy -auto-approve -var="provider_project_id=
 
 echo ""
 echo "Step 3: Deleting client linked dataset..."
-export PATH=/usr/local/google/home/sgardezi/google-cloud-sdk/bin:$PATH
+export PATH=$HOME/google-cloud-sdk/bin:$PATH
 bq rm -r -f -d "$CLIENT_PROJECT:$CLIENT_DATASET" || true
 
 echo ""

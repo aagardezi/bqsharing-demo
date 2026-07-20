@@ -25,7 +25,7 @@ If not already done, execute:
 ## E2E Demonstration Steps
 
 ### Step 1: Subscribe the Client
-*Act as the client user (`aagardezi@gmail.com`) authenticated on the client project (`cleanroomdemo-471909`).*
+*Act as the client user (`client-user@example.com`) authenticated on the client project (`cleanroomdemo-471909`).*
 
 First, subscribe the client to the provider's listing. This creates a read-only linked dataset in the client's workspace:
 ```bash
