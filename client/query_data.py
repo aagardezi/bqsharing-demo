@@ -1,3 +1,4 @@
+
 import sys
 from google.cloud import bigquery
 
