@@ -41,7 +41,7 @@ First, subscribe the client to the provider's listing. This creates a read-only 
 ### Step 2: Show the Initial Locked State
 Query the linked dataset views in the client project (e.g., using the BigQuery Console or our query script).
 ```bash
-python3 client/query_data.py cleanroomdemo-471909 shared_equities_views
+uv run --default-index https://pypi.org/simple --with google-cloud-bigquery client/query_data.py cleanroomdemo-471909 shared_equities_views
 ```
 
 **Expected Output:**
@@ -61,7 +61,7 @@ Query returned 0 rows.
 ### Step 3: Request Instruments (Granting Entitlements)
 Request tick data for specific symbols: **VOD** (LSE exchange) and **AAPL** (NASDAQ exchange). We do this by publishing the ticker list to LSEG's entitlement Pub/Sub topic:
 ```bash
-python3 client/publish_request.py genaillentsearch VOD AAPL
+uv run --default-index https://pypi.org/simple --with google-cloud-pubsub client/publish_request.py genaillentsearch VOD AAPL
 ```
 
 **Expected Output:**
@@ -78,7 +78,7 @@ Published message ID: 20314405726975140
 ### Step 4: Verify Dynamic Access
 Wait 5 seconds for view updates to propagate, then query the views again:
 ```bash
-python3 client/query_data.py cleanroomdemo-471909 shared_equities_views
+uv run --default-index https://pypi.org/simple --with google-cloud-bigquery client/query_data.py cleanroomdemo-471909 shared_equities_views
 ```
 
 **Expected Output:**
@@ -108,12 +108,12 @@ AAPL | Apple Inc. | Technology | USD
 ### Step 5: Shift Subscription (Real-time Change)
 Demonstrate how subscription changes are processed instantly. Let's remove our request for VOD and AAPL and request **MSFT** (NASDAQ) and **JPM** (NYSE) instead:
 ```bash
-python3 client/publish_request.py genaillentsearch MSFT JPM
+uv run --default-index https://pypi.org/simple --with google-cloud-pubsub client/publish_request.py genaillentsearch MSFT JPM
 ```
 
 Wait 5 seconds, then query the views once more:
 ```bash
-python3 client/query_data.py cleanroomdemo-471909 shared_equities_views
+uv run --default-index https://pypi.org/simple --with google-cloud-bigquery client/query_data.py cleanroomdemo-471909 shared_equities_views
 ```
 
 **Expected Output:**
